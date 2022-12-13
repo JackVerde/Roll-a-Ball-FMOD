@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{5ccbebb7-feb2-4561-91d1-4ccb30eb7cbf}">
+		<property name="assetPath">
+			<value>DragLoop.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>2.7418749999999998</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{a86b4787-d507-4747-914e-a56d3dd4791b}</destination>
+		</relationship>
+	</object>
+</objects>

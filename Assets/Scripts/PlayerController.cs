@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
+using FMODUnity;
+using UnityEngine.Playables;
 
 public class PlayerController : MonoBehaviour {
 	
@@ -8,6 +10,10 @@ public class PlayerController : MonoBehaviour {
 	public TMP_Text countText;
 	public TMP_Text winText;
     public GameObject RestartButton;
+    public EventReference PickUpEvent;
+    public EventReference WallHitEvent;
+    public StudioEventEmitter PlayerDragEmitter;
+
 
     // Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
     private Rigidbody rb;
@@ -18,7 +24,9 @@ public class PlayerController : MonoBehaviour {
 	{
 		// Assign the Rigidbody component to our private rb variable
 		rb = GetComponent<Rigidbody>();
-		RestartButton.SetActive(false);
+		PlayerDragEmitter = GetComponent<StudioEventEmitter>();
+
+        RestartButton.SetActive(false);
         // Set the count to zero 
         count = 0;
 
@@ -42,7 +50,9 @@ public class PlayerController : MonoBehaviour {
 		// Add a physical force to our Player rigidbody using our 'movement' Vector3 above, 
 		// multiplying it by 'speed' - our public player speed that appears in the inspector
 		rb.AddForce (movement * speed);
-	}
+		PlayerDragEmitter.SetParameter("Speed", rb.velocity.magnitude / 10f);
+
+    }
 
 	// When this game object intersects a collider with 'is trigger' checked, 
 	// store a reference to that collider in a variable named 'other'..
@@ -53,14 +63,27 @@ public class PlayerController : MonoBehaviour {
 		{
 			// Make the other game object (the pick up) inactive, to make it disappear
 			other.gameObject.SetActive (false);
-
-			// Add one to the score variable 'count'
-			count = count + 1;
+            RuntimeManager.PlayOneShot(PickUpEvent, transform.position);
+            // Add one to the score variable 'count'
+            count = count + 1;
 
 			// Run the 'SetCountText()' function (see below)
 			SetCountText ();
 		}
-	}
+
+
+    }
+
+	private void OnCollisionEnter(Collision collision)
+	{
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            var hitEVentInstance = RuntimeManager.CreateInstance(WallHitEvent);
+			hitEVentInstance.setParameterByName("Intesity", collision.relativeVelocity.magnitude / 10f);
+            hitEVentInstance.start();
+
+        }
+    }
 
 	// Create a standalone function that can update the 'countText' UI and check if the required amount to win has been achieved
 	void SetCountText()
