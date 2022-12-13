@@ -1,19 +1,16 @@
 ﻿using UnityEngine;
-
-// Include the namespace required to use Unity UI
-using UnityEngine.UI;
-
-using System.Collections;
+using TMPro;
 
 public class PlayerController : MonoBehaviour {
 	
 	// Create public variables for player speed, and for the Text UI game objects
 	public float speed;
-	public Text countText;
-	public Text winText;
+	public TMP_Text countText;
+	public TMP_Text winText;
+    public GameObject RestartButton;
 
-	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
-	private Rigidbody rb;
+    // Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
+    private Rigidbody rb;
 	private int count;
 
 	// At the start of the game..
@@ -21,9 +18,9 @@ public class PlayerController : MonoBehaviour {
 	{
 		// Assign the Rigidbody component to our private rb variable
 		rb = GetComponent<Rigidbody>();
-
-		// Set the count to zero 
-		count = 0;
+		RestartButton.SetActive(false);
+        // Set the count to zero 
+        count = 0;
 
 		// Run the SetCountText function to update the UI (see below)
 		SetCountText ();
@@ -76,6 +73,9 @@ public class PlayerController : MonoBehaviour {
 		{
 			// Set the text value of our 'winText'
 			winText.text = "You Win!";
-		}
-	}
+            RestartButton.SetActive(true);
+
+
+        }
+    }
 }
